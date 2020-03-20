@@ -1,0 +1,51 @@
+name:                zalgify
+version:             0.0.0.1
+github:              "BiCapitalization/zalgify"
+license:             MIT
+author:              "Ben Steffan"
+maintainer:          "bicapitalization@gmail.com"
+copyright:           "2020 Ben Steffan"
+
+extra-source-files:
+- README.md
+- ChangeLog.md
+
+# Metadata used when publishing your package
+# synopsis:            Short description of your package
+# category:            To be determined
+
+# To avoid duplicated efforts in documentation and dealing with the
+# complications of embedding Haddock markup inside cabal files, it is
+# common to point users to the README.md file.
+description:         Please see the README on GitHub at <https://github.com/BiCapitalization/zalgify#readme>
+
+dependencies:
+- base >= 4.7 && < 5
+- optparse-applicative
+- mtl
+- random
+
+library:
+  source-dirs: src
+
+executables:
+  zalgify-exe:
+    main:                Main.hs
+    source-dirs:         app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - zalgify
+
+tests:
+  zalgify-test:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - zalgify

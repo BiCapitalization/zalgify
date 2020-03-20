@@ -1,0 +1,72 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.33.0.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: 1ce8feb3a9a8234be442486013129769016432786ead8382cb85734823877dde
+
+name:           zalgify
+version:        0.1.0.0
+description:    Please see the README on GitHub at <https://github.com/BiCapitalization/zalgify#readme>
+homepage:       https://github.com/BiCapitalization/zalgify#readme
+bug-reports:    https://github.com/BiCapitalization/zalgify/issues
+author:         Ben Steffan
+maintainer:     bicapitalization@gmail.com
+copyright:      2020 Ben Steffan
+license:        BSD3
+license-file:   LICENSE
+build-type:     Simple
+extra-source-files:
+    README.md
+    ChangeLog.md
+
+source-repository head
+  type: git
+  location: https://github.com/BiCapitalization/zalgify
+
+library
+  exposed-modules:
+      OptionParser
+      ZalgoGenerator
+  other-modules:
+      Paths_zalgify
+  hs-source-dirs:
+      src
+  build-depends:
+      base >=4.7 && <5
+    , mtl
+    , optparse-applicative
+    , random
+  default-language: Haskell2010
+
+executable zalgify-exe
+  main-is: Main.hs
+  other-modules:
+      Paths_zalgify
+  hs-source-dirs:
+      app
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , mtl
+    , optparse-applicative
+    , random
+    , zalgify
+  default-language: Haskell2010
+
+test-suite zalgify-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Paths_zalgify
+  hs-source-dirs:
+      test
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , mtl
+    , optparse-applicative
+    , random
+    , zalgify
+  default-language: Haskell2010

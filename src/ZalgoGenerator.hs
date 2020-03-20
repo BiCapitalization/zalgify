@@ -34,6 +34,11 @@ stayMiddle = ['\x031b', '\x0340', '\x0341', '\x0358', '\x0321', '\x0322',
     '\x0327', '\x0328', '\x0334', '\x0336', '\x034f', '\x035c', '\x035d', '\x035e',
     '\x035f', '\x0360', '\x0362', '\x0338', '\x0361', '\x0489']
 
+randomStateR :: RandomGen g => (Int, Int) -> State g Int
+randomStateR bounds = state $ randomR bounds
+
+-- An utility function I am sorely missing from Control.Monad. Apply the monadic action
+-- n times successively. TODO: Put this into a utility module.
 chainM :: Monad m => Int -> (a -> m a) -> (a -> m a)
 chainM times f = iterate (>=> f) f !! times
 
@@ -41,11 +46,8 @@ selectFrom :: RandomGen g => [a] -> Int -> State g [a]
 selectFrom list count = chainM count f []
     where
         len = length list
-        f l = do
-            gen <- get
-            let (index, new_gen) = randomR (0, len - 1) gen
-            put new_gen 
-            return $ l ++ [list !! index]
+        f l = let append index = l ++ [list !! index]
+            in append <$> randomStateR (0, len - 1)
 
 -- Should I use Text here instead of String? Definitely. Why don't I? Because Text does
 -- not offer the required primitives, so the only solution, as far as I can see, would 
@@ -55,9 +57,5 @@ zalgify :: RandomGen g => Parameters -> String -> State g String
 zalgify (Parameters l) t = foldM f [] t
     where
         combined = goingUp ++ goingDown ++ stayMiddle
-        f s char = do
-            gen <- get
-            let (val, new_gen) = randomR (1, l) gen
-            put new_gen
-            diacritics <- selectFrom combined val
-            return $ s ++ (char : diacritics)
+        f s char = let append diacritics = s ++ (char : diacritics) 
+            in append <$> (randomStateR (1, l) >>= selectFrom combined)

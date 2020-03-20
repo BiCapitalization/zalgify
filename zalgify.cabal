@@ -4,17 +4,17 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 1ce8feb3a9a8234be442486013129769016432786ead8382cb85734823877dde
+-- hash: a691dfc34917b4ba859c8d6ce607d6edb36f8a5bb5a21456a9ebcaf480dcfff5
 
 name:           zalgify
-version:        0.1.0.0
+version:        0.0.0.1
 description:    Please see the README on GitHub at <https://github.com/BiCapitalization/zalgify#readme>
 homepage:       https://github.com/BiCapitalization/zalgify#readme
 bug-reports:    https://github.com/BiCapitalization/zalgify/issues
 author:         Ben Steffan
 maintainer:     bicapitalization@gmail.com
 copyright:      2020 Ben Steffan
-license:        BSD3
+license:        MIT
 license-file:   LICENSE
 build-type:     Simple
 extra-source-files:

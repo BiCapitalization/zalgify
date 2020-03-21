@@ -1,29 +1,41 @@
 module OptionParser 
-    (Options (FromFile, Direct),
+    (InputMode (FromFile, Direct),
+    Options (Options),
+    output,
+    input,
     parseOptions) 
 where
 
 import Options.Applicative
 import Data.Semigroup ((<>))
 
-data Options = FromFile FilePath
+data InputMode = FromFile FilePath
     | Direct String
 
-file :: Parser Options
-file = FromFile
+data Options = Options {output :: Maybe String, input :: InputMode}
+
+fileP :: Parser InputMode
+fileP = FromFile
     <$> strOption
     (long "file" 
     <> short 'f'
     <> metavar "FILE"
     <> help "Take input from FILE")
 
-text :: Parser Options
-text = Direct 
+textP :: Parser InputMode
+textP = Direct 
     <$> argument str
     (metavar "TEXT")
 
+outputP :: Parser (Maybe String)
+outputP = optional
+    $ strOption
+    $ short 'o'
+    <> metavar "OUT"
+    <> help "Send output to OUT"
+
 parser :: Parser Options
-parser = file <|> text
+parser = Options <$> outputP <*> (fileP <|> textP) 
 
 parseOptions :: IO Options
 parseOptions = execParser opts

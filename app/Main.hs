@@ -6,13 +6,19 @@ import Control.Monad.State.Lazy
 import System.Random
 
 main :: IO ()
-main = parseOptions >>= toZalgo >>= putStrLn
+main = parseOptions >>= toZalgo
 
-toZalgo :: Options -> IO String
-toZalgo s = case s of
-    FromFile path -> readFile path >>= zalg
-    Direct text   -> zalg text
+toZalgo :: Options -> IO ()
+toZalgo (Options outMode inMode) = toOut outMode =<< zalg <$> fromIn inMode
     where
-        zalg text = return $ evalState 
-            (zalgify (Parameters 8) text) 
+        zalg :: String -> String
+        zalg text = evalState (zalgify (Parameters 8) text) 
             (mkStdGen 8)
+
+        fromIn :: InputMode -> IO String
+        fromIn (FromFile path) = readFile path
+        fromIn (Direct text)   = return text
+        
+        toOut :: Maybe String -> String -> IO ()
+        toOut (Just file) = writeFile file 
+        toOut _           = putStrLn

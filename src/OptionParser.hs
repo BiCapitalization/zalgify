@@ -3,6 +3,8 @@ module OptionParser
     Options (Options),
     output,
     input,
+    level,
+    seed,
     parseOptions) 
 where
 
@@ -12,7 +14,12 @@ import Data.Semigroup ((<>))
 data InputMode = FromFile FilePath
     | Direct String
 
-data Options = Options {output :: Maybe String, input :: InputMode}
+data Options = Options {
+    output :: Maybe String,
+    input  :: InputMode,
+    level  :: Int,
+    seed   :: Maybe Int
+}
 
 fileP :: Parser InputMode
 fileP = FromFile
@@ -34,8 +41,29 @@ outputP = optional
     <> metavar "OUT"
     <> help "Send output to OUT"
 
+levelP :: Parser Int
+levelP = option auto
+    $ long "level"
+    <> short 'l'
+    <> value 5
+    <> showDefault
+    <> metavar "INT"
+    <> help "Maximum number of diacritics to add to each single character"
+
+seedP :: Parser (Maybe Int)
+seedP = optional $ option auto
+    $ long "seed"
+    <> short 's'
+    <> metavar "SEED"
+    <> help "Value to seed the random generator with"
+
 parser :: Parser Options
-parser = Options <$> outputP <*> (fileP <|> textP) 
+parser = Options
+    <$> outputP
+    <*> (fileP
+    <|> textP)
+    <*> levelP
+    <*> seedP
 
 parseOptions :: IO Options
 parseOptions = execParser opts

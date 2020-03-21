@@ -6,8 +6,13 @@ import Control.Monad.State.Lazy
 import System.Random
 
 main :: IO ()
-main = parseOptions >>= putStrLn . greet
+main = parseOptions >>= toZalgo >>= putStrLn
 
-greet :: Options -> String
-greet (FromFile path) = "Not yet supported :("
-greet (Direct text) = evalState (zalgify (Parameters 8) text) (mkStdGen 8)
+toZalgo :: Options -> IO String
+toZalgo s = case s of
+    FromFile path -> readFile path >>= zalg
+    Direct text   -> zalg text
+    where
+        zalg text = return $ evalState 
+            (zalgify (Parameters 8) text) 
+            (mkStdGen 8)
